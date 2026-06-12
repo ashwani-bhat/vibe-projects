@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self-Healing Pixel Art</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🩹 Self-Healing Pixel Art</h1>
+    <p class="tagline">
+      Draw a sprite. A tiny neural cellular automaton (~8K parameters) learns to
+      <em>grow</em> it from a single pixel — then erase chunks of it and watch it heal.
+    </p>
+  </header>
+
+  <nav class="tabs">
+    <button id="tab-draw">1 · Draw</button>
+    <button id="tab-train">2 · Train</button>
+    <button id="tab-play">3 · Destroy &amp; Heal</button>
+  </nav>
+
+  <main>
+    <section id="panel-draw" class="panel">
+      <canvas id="draw-canvas" width="384" height="384"></canvas>
+      <div class="controls">
+        <div id="palette"></div>
+        <div class="row">
+          <button id="btn-eraser">🧽 eraser</button>
+          <button id="btn-clear">🗑 clear</button>
+        </div>
+        <div class="row">
+          <span class="label">presets:</span>
+          <button data-preset="heart">❤️ heart</button>
+          <button data-preset="mushroom">🍄 mushroom</button>
+          <button data-preset="ghost">👻 ghost</button>
+        </div>
+        <p class="hint">Click / drag to paint a 24×24 sprite. Keep it chunky — bold shapes train best.</p>
+      </div>
+    </section>
+
+    <section id="panel-train" class="panel" hidden>
+      <canvas id="train-canvas" width="384" height="384"></canvas>
+      <div class="controls">
+        <button id="btn-train" class="big">▶ train</button>
+        <p id="train-status" class="status">fresh model — not trained yet</p>
+        <canvas id="loss-canvas" width="260" height="80"></canvas>
+        <p class="hint">
+          The preview shows the CA growing your sprite from one seed pixel.
+          First it learns to <strong>grow</strong> (~300 steps), then samples get
+          deliberately damaged so it learns to <strong>heal</strong>.
+          ~1500–3000 steps gives solid regeneration. You can pause anytime.
+        </p>
+        <div class="row">
+          <button id="btn-reset-model">↺ reset model</button>
+          <button id="btn-export">⬇ export weights</button>
+          <label class="filebtn">⬆ import weights<input type="file" id="file-import" accept=".json"></label>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-play" class="panel" hidden>
+      <canvas id="play-canvas" width="384" height="384"></canvas>
+      <div class="controls">
+        <p id="play-hint" class="status"></p>
+        <div class="row">
+          <span class="label">eraser size</span>
+          <input type="range" id="brush-size" min="1" max="8" value="3">
+        </div>
+        <div class="row">
+          <span class="label">speed</span>
+          <select id="play-speed">
+            <option value="1" selected>1×</option>
+            <option value="2">2×</option>
+            <option value="4">4×</option>
+          </select>
+        </div>
+        <div class="row">
+          <button id="btn-meteor">☄️ destroy half</button>
+          <button id="btn-reseed">🌱 regrow from seed</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>How it works:</strong> every pixel is a little agent with 16 numbers of state.
+      Each tick it peeks at its 3×3 neighborhood (Sobel filters), runs a 2-layer network,
+      and nudges its own state. No pixel knows the whole picture — the image is a stable
+      attractor of thousands of local conversations, which is why wounds close themselves.
+      Based on <a href="https://distill.pub/2020/growing-ca/" target="_blank" rel="noopener">
+      Growing Neural Cellular Automata</a> (Mordvintsev et&nbsp;al., Distill 2020).
+      Everything runs and trains in your browser. <span id="backend"></span>
+    </p>
+  </footer>
+
+  <script src="nca.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
