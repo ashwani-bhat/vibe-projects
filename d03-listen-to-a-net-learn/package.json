@@ -1,0 +1,10 @@
+{
+  "name": "d03-listen-to-a-net-learn",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Listen to a neural net learn — gradient descent sonified live in the browser",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}

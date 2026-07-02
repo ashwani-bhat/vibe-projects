@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listen to a Neural Net Learn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎧 Listen to a Neural Net Learn</h1>
+    <p class="tagline">
+      A tiny neural network learns to untangle two spirals — and its training is the score.
+      It starts as an <em>out-of-tune orchestra</em> and tunes itself as it learns.
+      Headphones on, then press play.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <canvas id="boundary-canvas" width="384" height="384"></canvas>
+      <div class="controls">
+        <button id="btn-play" class="big">▶ listen &amp; train</button>
+        <p id="status" class="status">fresh model — silence before the music</p>
+        <canvas id="loss-canvas" width="260" height="64"></canvas>
+        <canvas id="tuner-canvas" width="260" height="104"></canvas>
+        <div class="row">
+          <span class="label">problem</span>
+          <select id="sel-dataset">
+            <option value="spiral" selected>two spirals</option>
+            <option value="circles">circle in a ring</option>
+            <option value="moons">two moons</option>
+            <option value="xor">XOR blobs</option>
+          </select>
+        </div>
+        <div class="row">
+          <span class="label">learning rate</span>
+          <select id="sel-lr">
+            <option value="0.005">careful</option>
+            <option value="0.02" selected>normal</option>
+            <option value="0.05">reckless</option>
+          </select>
+          <button id="btn-reset">↺ new random brain</button>
+        </div>
+        <div class="row">
+          <span class="label">volume</span>
+          <input type="range" id="vol" min="0" max="1" step="0.01" value="0.7">
+        </div>
+        <p class="hint">
+          The drone chord has one voice per layer, detuned by how hard that layer
+          is being corrected. The melody plays one note per classified point —
+          in-scale when the net is right, a sour semitone off when it's wrong,
+          louder for bigger mistakes. When the chord settles pure and the melody
+          goes quiet and consonant, it has learned.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>What you're hearing:</strong> a 2-24-24-1 network (~700 parameters) trains
+      live in your page, and every part of the sound is a real training signal.
+      The <em>drone</em> is a just-intonation A-major chord — root plus one voice per
+      weight layer, each detuned in proportion to that layer's gradient magnitude,
+      so backprop literally plays the orchestra out of tune until learning stops.
+      Timbre follows the loss: sawtooth rasp at coin-flip loss, warm triangle as it
+      converges. The <em>melody</em> probes one training point per beat: hidden-layer
+      activations pick the pitch on a pentatonic scale, wrong answers land a
+      semitone off-scale, loudness is the size of the error, and tempo tracks the
+      loss — frantic early, calm at the end. Chimes mark 75% / 90% / 97% accuracy.
+      No samples, no libraries — pure Web Audio oscillators and a hand-rolled
+      backprop in ~200 lines.
+    </p>
+  </footer>
+
+  <script src="mlp.js"></script>
+  <script src="sonify.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
