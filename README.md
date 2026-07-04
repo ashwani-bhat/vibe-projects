@@ -6,7 +6,7 @@ Small, weird, hands-on ML projects — built one at a time, each with a live in-
 |---|---------|-----------|--------|
 | D2 | Pixel art that heals itself when you erase it | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d02-self-healing-pixel-art/) | [`d02-self-healing-pixel-art/`](./d02-self-healing-pixel-art/) |
 | D3 | Listen to a neural net learn (training → music) | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d03-listen-to-a-net-learn/) | [`d03-listen-to-a-net-learn/`](./d03-listen-to-a-net-learn/) |
-| D4 | Webcam sign-language recognizer | — | coming up |
+| D4 | Webcam sign-language recognizer | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d04-webcam-sign-language/) | [`d04-webcam-sign-language/`](./d04-webcam-sign-language/) |
 | D5 | GPT inside a Google Sheet | — | coming up |
 | D6 | A photo compressed into a 12KB neural net | — | coming up |
 | D7 | A model that dreams Pong — and you play inside the dream | — | coming up |

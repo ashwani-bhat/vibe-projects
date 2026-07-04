@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webcam Sign-Language Recognizer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1675466124/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🤟 Webcam Sign-Language Recognizer</h1>
+    <p class="tagline">
+      Teach your browser <em>your</em> signs. Record a handful of samples per sign,
+      train a tiny network right here (under a second), then fingerspell at your
+      webcam and watch it type. Nothing leaves your machine.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="cam-col">
+        <video id="video" playsinline hidden></video>
+        <canvas id="overlay" width="480" height="360"></canvas>
+        <p id="status" class="status">camera is off</p>
+        <div class="predict-row">
+          <span class="label">seeing:</span>
+          <span id="prediction" class="prediction">—</span>
+        </div>
+        <div class="transcript-row">
+          <span id="transcript" class="transcript"></span>
+          <button id="btn-backspace" title="backspace">⌫</button>
+          <button id="btn-clear" title="clear">🗑</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="btn-camera" class="big">🎥 enable camera</button>
+        <div class="row">
+          <input id="new-name" type="text" maxlength="12" placeholder="name a sign…">
+          <button id="btn-add">+ add</button>
+        </div>
+        <div class="row">
+          <span class="label">try ASL:</span>
+          <button data-sign="A">A</button>
+          <button data-sign="B">B</button>
+          <button data-sign="C">C</button>
+          <button data-sign="L">L</button>
+          <button data-sign="Y">Y</button>
+          <button data-sign="👍">👍</button>
+        </div>
+        <div id="classes"></div>
+        <button id="btn-train" class="big">✦ train</button>
+        <p id="train-status" class="status">no model yet</p>
+        <div id="bars"></div>
+        <p class="hint">
+          Hold <strong>● record</strong> while holding a sign steady in front of the
+          camera — vary the angle and distance a little. 30–60 samples per sign works
+          well. Retrain any time you add samples or signs. Holding a recognized sign
+          steady for a second types it into the transcript.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>How it works:</strong> MediaPipe Hands finds 21 hand landmarks in every
+      webcam frame. Those get canonicalized — wrist to the origin, rotated so the
+      wrist→knuckle bone points up, scaled to unit hand size, left hands mirrored —
+      so the classifier sees the <em>shape</em> of your hand, not where it happens to
+      be. A 63→32→K softmax network (hand-rolled backprop + Adam, no ML library)
+      trains on your recorded samples in a few hundred milliseconds, with gaussian
+      jitter standing in for webcam wobble. Predictions are smoothed over frames, and
+      a sign held steadily above 85% confidence for ~1s gets typed. Your camera
+      frames and samples never leave the page — there is no backend.
+    </p>
+  </footer>
+
+  <script src="landmarks.js"></script>
+  <script src="classifier.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

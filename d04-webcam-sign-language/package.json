@@ -1,0 +1,10 @@
+{
+  "name": "d04-webcam-sign-language",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Teach your browser your signs — webcam hand-landmark recognizer trained live in-page",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}
