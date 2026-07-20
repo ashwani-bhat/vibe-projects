@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Photo in a 12KB Neural Net</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🧠 A Photo in a 12KB Neural Net</h1>
+    <p class="tagline">
+      Don't store the pixels — store a <em>function</em>. A tiny network learns
+      f(x,&nbsp;y) → color until the function <em>is</em> your photo, then the whole
+      image fits in ~12KB of weights. Watch it fight JPEG at the same file size.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="col">
+        <h2>original</h2>
+        <canvas id="target-canvas" width="320" height="320"></canvas>
+        <div class="row">
+          <label class="filebtn">⬆ your photo<input type="file" id="file-photo" accept="image/*"></label>
+          <button id="btn-demo">🌅 demo sunset</button>
+        </div>
+      </div>
+      <div class="col">
+        <h2>the 12KB network</h2>
+        <canvas id="recon-canvas" width="320" height="320"></canvas>
+        <div class="row">
+          <button id="btn-train" class="big">▶ compress</button>
+          <span class="label">render</span>
+          <select id="sel-zoom">
+            <option value="1" selected>1×</option>
+            <option value="2">2×</option>
+            <option value="4">4× (continuous!)</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <h2>JPEG, same budget</h2>
+        <canvas id="jpeg-canvas" width="320" height="320"></canvas>
+        <p id="jpeg-note" class="hint"></p>
+      </div>
+      <div class="controls-wide">
+        <p id="status" class="status">untrained</p>
+        <p id="size-note" class="hint"></p>
+        <div class="row">
+          <button id="btn-reset">↺ reset network</button>
+          <button id="btn-export">⬇ export the photo as weights</button>
+          <label class="filebtn">⬆ import weights<input type="file" id="file-import" accept=".json"></label>
+        </div>
+        <p class="hint">
+          Hit <strong>▶ compress</strong> and watch a blur become your photo as the
+          network trains (a minute or two is plenty). Then try the <strong>4× render</strong> —
+          the net is a continuous function, so unlike pixels it can be sampled at any
+          resolution. Export the weights: that JSON file <em>is</em> the photo.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>How it works:</strong> this is an implicit neural representation —
+      a SIREN (<a href="https://arxiv.org/abs/2006.09661" target="_blank" rel="noopener">
+      Sitzmann et&nbsp;al., 2020</a>). A 2→72→72→3 network with sine activations maps
+      every coordinate to a color; ~5,700 weights quantized to 16 bits ≈ 12KB.
+      Training samples random pixels and runs Adam on the MSE — live, in your
+      browser, via TensorFlow.js. Sine activations (with the w0=30 trick) are what
+      let so small a net capture edges; try the same with ReLU and you get mush.
+      The JPEG panel binary-searches quality until the file matches the network's
+      byte size, so the fight is fair. Your photo never leaves the page.
+      <span id="backend"></span>
+    </p>
+  </footer>
+
+  <script src="siren.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

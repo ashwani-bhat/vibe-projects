@@ -1,0 +1,13 @@
+{
+  "name": "d06-photo-in-a-neural-net",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A photo compressed into a ~12KB neural net — implicit neural representation trained in the browser",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "@tensorflow/tfjs": "^4.22.0"
+  }
+}
