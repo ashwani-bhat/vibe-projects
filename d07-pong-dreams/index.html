@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pong Dreams</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>💤 Pong Dreams</h1>
+    <p class="tagline">
+      A neural net watches Pong until it learns how the world works — then the game
+      switches off and you play <em>inside the network's dream</em>, where every
+      frame is hallucinated and physics is whatever it believes physics to be.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div id="learn-view" class="views">
+        <div class="col">
+          <h2>reality</h2>
+          <canvas id="real-canvas" width="256" height="256"></canvas>
+        </div>
+        <div class="col">
+          <h2>what the net expects next</h2>
+          <canvas id="pred-canvas" width="256" height="256"></canvas>
+        </div>
+      </div>
+
+      <div id="dream-view" class="views" hidden>
+        <div class="col">
+          <h2>THE DREAM — every pixel imagined</h2>
+          <canvas id="dream-canvas" width="320" height="320"></canvas>
+          <div class="row">
+            <button id="btn-up">▲</button>
+            <button id="btn-down">▼</button>
+            <span class="hint">or ↑/↓ · W/S — you steer the left paddle</span>
+          </div>
+        </div>
+        <div class="col" id="reality-wrap">
+          <h2>meanwhile, in reality</h2>
+          <canvas id="reality-canvas" width="160" height="160"></canvas>
+          <p class="hint">same seed, same inputs, real physics — watch them drift apart</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="row">
+          <button id="btn-run" class="big">▶ start</button>
+          <button id="btn-mode" class="big">💤 enter the dream</button>
+        </div>
+        <p id="status" class="status">press start — the net begins by watching</p>
+        <canvas id="loss-canvas" width="260" height="64"></canvas>
+        <div class="row">
+          <label class="chk"><input type="checkbox" id="chk-crisp" checked> crisp dream (binarize feedback)</label>
+        </div>
+        <div class="row">
+          <label class="chk"><input type="checkbox" id="chk-reality" checked> show reality alongside</label>
+          <button id="btn-reseed">🌱 re-seed dream from reality</button>
+        </div>
+        <p class="hint">
+          Train until the loss flattens and the prediction panel looks like the game
+          (~a minute). Then enter the dream: the simulator stops feeding the screen —
+          the net predicts frame t+1 from its own frames t and t−1, plus your paddle
+          input. The opponent you play against in there isn't programmed anymore;
+          it's the net's <em>memory</em> of the opponent. Dreams decay — when the ball
+          dissolves, re-seed.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>How it works:</strong> a world model in miniature
+      (<a href="https://worldmodels.github.io/" target="_blank" rel="noopener">Ha &amp;
+      Schmidhuber, 2018</a>). While the real game runs, transitions
+      (frame&nbsp;t−1, frame&nbsp;t, action) → frame&nbsp;t+1 fill a replay buffer, and an
+      MLP (two 32×32 frames + action one-hot → 384 ReLU → 1024 pixel logits, ~1.2M
+      parameters) trains on per-pixel sigmoid cross-entropy via TensorFlow.js.
+      Dream mode feeds the model its own output back — closed-loop, no simulator —
+      with your action injected each step. The "crisp dream" toggle binarizes the
+      feedback frame, which fights the blur death-spiral that compounding
+      uncertainty causes; turn it off to watch the dream melt. The reality panel
+      runs true physics from the same seed with the same inputs: the divergence you
+      see is exactly the model's error, compounding at 30fps.
+      <span id="backend"></span>
+    </p>
+  </footer>
+
+  <script src="pong.js"></script>
+  <script src="model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+:root {
+  --bg: #14172455;
+  --panel: #1d2030;
+  --text: #e6e8f2;
+  --dim: #9aa0b8;
+  --accent: #73eff7;
+  --accent2: #ffcd75;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  max-width: 940px;
+  padding: 24px 16px 48px;
+  background: #0f1119;
+  color: var(--text);
+  font-family: ui-monospace, "Cascadia Code", "JetBrains Mono", Menlo, monospace;
+  line-height: 1.55;
+}
+
+header h1 { margin: 0 0 4px; font-size: 1.6rem; letter-spacing: 0.5px; }
+.tagline { color: var(--dim); margin-top: 0; }
+.tagline em { color: var(--accent2); font-style: normal; }
+
+.panel {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: var(--panel);
+  border: 1px solid #2c3047;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.views { display: flex; gap: 24px; flex-wrap: wrap; }
+.views[hidden] { display: none; }
+.col { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.col h2 { margin: 0; font-size: 0.85rem; color: var(--dim); font-weight: normal; letter-spacing: 1px; }
+
+canvas {
+  image-rendering: pixelated;
+  border-radius: 6px;
+  background: #0f1119;
+  border: 1px solid #2c3047;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+#loss-canvas { border: 1px solid #2c3047; }
+
+.controls { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 12px; }
+
+button, select {
+  background: #262a40;
+  color: var(--text);
+  border: 1px solid #3a3f5c;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.big { font-size: 1.05rem; padding: 10px 14px; }
+button.big.active { background: var(--accent); color: #0f1119; border-color: var(--accent); }
+#btn-up, #btn-down { font-size: 1.2rem; padding: 8px 20px; user-select: none; touch-action: none; }
+
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.chk { color: var(--dim); cursor: pointer; }
+.chk input { accent-color: var(--accent); }
+.status { color: var(--accent2); min-height: 1.4em; margin: 0; }
+.hint { color: var(--dim); font-size: 0.85rem; margin: 0; }
+
+footer { margin-top: 24px; color: var(--dim); font-size: 0.85rem; }
+footer a { color: var(--accent); }
+#backend { color: #566c86; }

@@ -9,7 +9,7 @@ Small, weird, hands-on ML projects — built one at a time, each with a live in-
 | D4 | Webcam sign-language recognizer | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d04-webcam-sign-language/) | [`d04-webcam-sign-language/`](./d04-webcam-sign-language/) |
 | D5 | GPT inside a Google Sheet | — | coming up |
 | D6 | A photo compressed into a 12KB neural net | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d06-photo-in-a-neural-net/) | [`d06-photo-in-a-neural-net/`](./d06-photo-in-a-neural-net/) |
-| D7 | A model that dreams Pong — and you play inside the dream | — | coming up |
+| D7 | A model that dreams Pong — and you play inside the dream | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d07-pong-dreams/) | [`d07-pong-dreams/`](./d07-pong-dreams/) |
 | D8 | Invisible adversarial illusions, interactive | — | coming up |
 | D9 | One model trained by every stranger who visits my site | — | coming up |
 | D10 | A GPT clone of me, trained on my own texts | — | coming up |

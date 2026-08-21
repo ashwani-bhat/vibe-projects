@@ -1,0 +1,13 @@
+{
+  "name": "d07-pong-dreams",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A neural net dreams Pong and you play inside the dream — a world model in the browser",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "@tensorflow/tfjs": "^4.22.0"
+  }
+}
