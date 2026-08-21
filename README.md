@@ -13,7 +13,7 @@ Small, weird, hands-on ML projects — built one at a time, each with a live in-
 | D8 | Invisible adversarial illusions, interactive | — | coming up |
 | D9 | One model trained by every stranger who visits my site | — | coming up |
 | D10 | A GPT clone of me, trained on my own texts | — | coming up |
-| D11 | Creatures evolving to walk — no backprop, just survival | — | coming up |
+| D11 | Creatures evolving to walk — no backprop, just survival | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d11-evolving-walkers/) | [`d11-evolving-walkers/`](./d11-evolving-walkers/) |
 | D12 | Teaching an LLM a language I invented | — | coming up |
 | D13 | An AI courtroom — prosecution, defense, judges | — | coming up |
 | D14 | Fly through English as a 3D word galaxy | — | coming up |

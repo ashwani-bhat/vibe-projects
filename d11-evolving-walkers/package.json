@@ -1,0 +1,10 @@
+{
+  "name": "d11-evolving-walkers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Creatures evolving to walk — no backprop, just survival. Verlet physics + genetic algorithm in the browser",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}

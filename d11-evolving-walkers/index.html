@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evolving Walkers</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🦠 Evolving Walkers</h1>
+    <p class="tagline">
+      Blobs of springs and joints learn to walk with <em>no brain and no backprop</em> —
+      just mutation, and the brutal rule that whoever crawls furthest gets to reproduce.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="col-wide">
+        <canvas id="walk-canvas" width="640" height="300"></canvas>
+      </div>
+      <div class="controls">
+        <div class="row">
+          <button id="btn-run" class="big">▶ evolve</button>
+          <button id="btn-ff">⏩ +10 generations</button>
+        </div>
+        <p id="status" class="status">generation 0</p>
+        <canvas id="chart-canvas" width="260" height="90"></canvas>
+        <div class="row">
+          <span class="label">mutation</span>
+          <input type="range" id="mut-rate" min="0.2" max="3" step="0.1" value="1">
+        </div>
+        <div class="row">
+          <button id="btn-reset">↺ new primordial soup</button>
+        </div>
+        <p class="hint">
+          The big view replays the current champion in real time — nodes are feet
+          (brighter = grippier), yellow muscles are mid-contraction. Evolution runs
+          in fast-forward behind the scenes: each generation, every creature gets 8
+          simulated seconds to walk; the far-walking half breeds, the rest are
+          compost. Watch gaits invent themselves around generation 20–50.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>How it works:</strong> a creature is just nodes and springs. Each
+      muscle rhythmically oscillates its rest length (sine wave with evolved
+      amplitude, period, and phase); each node has an evolved <em>grip</em> that
+      controls how much the ground grabs it. Physics is plain verlet integration
+      with constraint relaxation — ~60 lines, no library. The genome is the body
+      plan plus the rhythm; fitness is distance walked in 8s. Selection is
+      truncation (top half survives), variation is gaussian mutation plus the
+      occasional grown limb, and a trickle of random immigrants keeps the gene
+      pool weird. There is no neural network and no gradient in this project —
+      it's pure evolution, the algorithm that built the things that later built
+      neural networks.
+    </p>
+  </footer>
+
+  <script src="physics.js"></script>
+  <script src="evolve.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
