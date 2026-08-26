@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Projects · Ashwani Bhat</title>
+  <meta name="description" content="Small, weird, hands-on ML experiments — each one runs and trains entirely in your browser. Self-healing pixel art, sonified training, world models you can play inside, and more.">
+  <meta property="og:title" content="Vibe Projects">
+  <meta property="og:description" content="Small, weird, hands-on ML experiments that run and train live in your browser.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
+  <style>
+    :root {
+      --bg: #0f1119;
+      --panel: #1d2030;
+      --panel2: #181b2a;
+      --line: #2c3047;
+      --text: #e6e8f2;
+      --dim: #9aa0b8;
+      --faint: #566c86;
+      --accent: #73eff7;
+      --accent2: #ffcd75;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, "Cascadia Code", "JetBrains Mono", Menlo, monospace;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 56px 20px 48px;
+    }
+
+    header h1 {
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      letter-spacing: 0.5px;
+    }
+    header h1 .spark { color: var(--accent); }
+    .tagline {
+      color: var(--dim);
+      max-width: 640px;
+      margin-top: 10px;
+    }
+    .tagline em { color: var(--accent2); font-style: normal; }
+    .byline {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--faint);
+    }
+    .byline a { color: var(--accent); text-decoration: none; }
+    .byline a:hover { text-decoration: underline; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+      margin-top: 40px;
+    }
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.5s ease forwards;
+    }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+    .card:nth-child(5) { animation-delay: 0.33s; }
+    .card:nth-child(6) { animation-delay: 0.40s; }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(115, 239, 247, 0.55);
+      box-shadow: 0 14px 44px rgba(115, 239, 247, 0.09);
+    }
+    .card__top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card__emoji { font-size: 1.9rem; line-height: 1; }
+    .card__no {
+      margin-left: auto;
+      font-size: 0.68rem;
+      color: var(--accent);
+      border: 1px solid rgba(115, 239, 247, 0.4);
+      border-radius: 99px;
+      padding: 2px 9px;
+      letter-spacing: 0.06em;
+    }
+    .card h3 { font-size: 1.02rem; line-height: 1.4; }
+    .card p { font-size: 0.84rem; color: var(--dim); flex: 1; }
+    .card__links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+    .card__play {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    /* the play link stretches over the whole card */
+    .card__play::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+    .card:hover .card__play { text-decoration: underline; }
+    .card__src {
+      position: relative;
+      z-index: 1;
+      color: var(--faint);
+      text-decoration: none;
+    }
+    .card__src:hover { color: var(--text); }
+    .card__badge {
+      margin-left: auto;
+      font-size: 0.64rem;
+      color: var(--accent2);
+      opacity: 0.85;
+    }
+
+    .incubator { margin-top: 56px; }
+    .incubator h2 {
+      font-size: 0.85rem;
+      color: var(--dim);
+      font-weight: normal;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .incubator h2::after { content: "_"; color: var(--accent); }
+    .soon {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .soon span {
+      font-size: 0.74rem;
+      color: var(--faint);
+      background: var(--panel2);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 5px 12px;
+    }
+    .soon b { color: var(--dim); font-weight: normal; margin-right: 5px; }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.76rem;
+      color: var(--faint);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card { animation: none; opacity: 1; transform: none; }
+      #bg-canvas { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header>
+      <h1>🧪 Vibe Projects<span class="spark">_</span></h1>
+      <p class="tagline">
+        Small, weird, hands-on ML experiments. Every demo below <em>runs and trains
+        entirely in your browser</em> — no backend, no build step, and most of them
+        with no libraries at all.
+      </p>
+      <p class="byline">
+        a side-quest log by <a href="https://ashwani-bhat.github.io/">Ashwani Bhat</a>
+        · <a href="https://github.com/ashwani-bhat/vibe-projects">source on GitHub</a>
+      </p>
+    </header>
+
+    <main class="grid">
+      <article class="card">
+        <div class="card__top"><span class="card__emoji">🩹</span><span class="card__no">D2</span></div>
+        <h3>Self-Healing Pixel Art</h3>
+        <p>Draw a sprite. A tiny neural cellular automaton learns to grow it from a
+           single pixel — then erase chunks of it and watch the wound close itself.</p>
+        <div class="card__links">
+          <a class="card__play" href="d02-self-healing-pixel-art/">▶ play</a>
+          <a class="card__src" href="https://github.com/ashwani-bhat/vibe-projects/tree/main/d02-self-healing-pixel-art">source ↗</a>
+          <span class="card__badge">trains in-browser</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__top"><span class="card__emoji">🎧</span><span class="card__no">D3</span></div>
+        <h3>Listen to a Neural Net Learn</h3>
+        <p>Training as a score: each layer is a drone voice detuned by its gradients.
+           An out-of-tune orchestra that tunes itself as the loss falls. Headphones on.</p>
+        <div class="card__links">
+          <a class="card__play" href="d03-listen-to-a-net-learn/">▶ play</a>
+          <a class="card__src" href="https://github.com/ashwani-bhat/vibe-projects/tree/main/d03-listen-to-a-net-learn">source ↗</a>
+          <span class="card__badge">zero libraries</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__top"><span class="card__emoji">🤟</span><span class="card__no">D4</span></div>
+        <h3>Webcam Sign-Language Recognizer</h3>
+        <p>Teach your browser <em>your</em> signs: record a handful of samples, train in
+           ~200ms, then fingerspell at the camera and watch it type. Nothing is uploaded.</p>
+        <div class="card__links">
+          <a class="card__play" href="d04-webcam-sign-language/">▶ play</a>
+          <a class="card__src" href="https://github.com/ashwani-bhat/vibe-projects/tree/main/d04-webcam-sign-language">source ↗</a>
+          <span class="card__badge">needs a webcam</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__top"><span class="card__emoji">🧠</span><span class="card__no">D6</span></div>
+        <h3>A Photo in a 12KB Neural Net</h3>
+        <p>Don't store pixels — store a function. A SIREN learns f(x,y) → color until it
+           <em>is</em> your photo, then fights JPEG at the same byte budget.</p>
+        <div class="card__links">
+          <a class="card__play" href="d06-photo-in-a-neural-net/">▶ play</a>
+          <a class="card__src" href="https://github.com/ashwani-bhat/vibe-projects/tree/main/d06-photo-in-a-neural-net">source ↗</a>
+          <span class="card__badge">trains in-browser</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__top"><span class="card__emoji">💤</span><span class="card__no">D7</span></div>
+        <h3>Pong Dreams</h3>
+        <p>A world model watches Pong until it learns the physics — then the simulator
+           switches off and you play inside the network's hallucination as it drifts.</p>
+        <div class="card__links">
+          <a class="card__play" href="d07-pong-dreams/">▶ play</a>
+          <a class="card__src" href="https://github.com/ashwani-bhat/vibe-projects/tree/main/d07-pong-dreams">source ↗</a>
+          <span class="card__badge">playable dream</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card__top"><span class="card__emoji">🦠</span><span class="card__no">D11</span></div>
+        <h3>Evolving Walkers</h3>
+        <p>Blobs of springs and joints learn to walk with no brain and no backprop —
+           just mutation and the rule that whoever crawls furthest gets to reproduce.</p>
+        <div class="card__links">
+          <a class="card__play" href="d11-evolving-walkers/">▶ play</a>
+          <a class="card__src" href="https://github.com/ashwani-bhat/vibe-projects/tree/main/d11-evolving-walkers">source ↗</a>
+          <span class="card__badge">pure evolution</span>
+        </div>
+      </article>
+    </main>
+
+    <section class="incubator">
+      <h2>in the incubator</h2>
+      <div class="soon">
+        <span><b>D5</b> GPT inside a Google Sheet</span>
+        <span><b>D8</b> invisible adversarial illusions</span>
+        <span><b>D9</b> one model trained by every visitor</span>
+        <span><b>D10</b> a GPT clone of me</span>
+        <span><b>D12</b> teaching an LLM an invented language</span>
+        <span><b>D13</b> an AI courtroom</span>
+        <span><b>D14</b> English as a 3D word galaxy</span>
+        <span><b>D15</b> the model zoo, open-sourced</span>
+      </div>
+    </section>
+
+    <footer>
+      <span>© <span id="year"></span> Ashwani Bhat · everything here trains where you can see it</span>
+      <span><a href="https://ashwani-bhat.github.io/">~/ashwani-bhat</a> · <a href="https://github.com/ashwani-bhat/vibe-projects">github</a></span>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Background: a sparse field of pixel cells that decay and heal — a quiet
+    // homage to D2. Cheap: ~90 cells at 12fps.
+    (() => {
+      const canvas = document.getElementById('bg-canvas');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const ctx = canvas.getContext('2d');
+      const CELL = 14;
+      let cells = [];
+
+      function resize() {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        const n = Math.min(110, Math.floor(innerWidth * innerHeight / 16000));
+        cells = Array.from({ length: n }, () => spawn());
+      }
+      function spawn() {
+        return {
+          x: Math.floor(Math.random() * (innerWidth / CELL)) * CELL,
+          y: Math.floor(Math.random() * (innerHeight / CELL)) * CELL,
+          life: Math.random(),
+          rate: 0.004 + Math.random() * 0.012,
+          warm: Math.random() < 0.2,
+        };
+      }
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < cells.length; i++) {
+          const c = cells[i];
+          c.life -= c.rate;
+          if (c.life <= 0) { cells[i] = spawn(); cells[i].life = 1; } // full arc: fade in, fade out
+          const a = Math.sin(Math.min(1, cells[i].life) * Math.PI);
+          ctx.fillStyle = cells[i].warm
+            ? `rgba(255, 205, 117, ${a * 0.10})`
+            : `rgba(115, 239, 247, ${a * 0.09})`;
+          ctx.fillRect(cells[i].x, cells[i].y, CELL - 3, CELL - 3);
+        }
+      }
+      resize();
+      addEventListener('resize', resize);
+      setInterval(tick, 85);
+    })();
+  </script>
+</body>
+</html>
