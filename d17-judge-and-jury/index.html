@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Judge &amp; Jury</title>
+  <meta name="description" content="Build an LLM-as-a-Judge evaluation protocol — panel, position-swap, aggregation, self-preference mitigation — and watch which biases survive into the leaderboard.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>⚖️ Judge &amp; Jury</h1>
+    <p class="tagline">
+      LLM-as-a-Judge, built properly. Assemble a panel, choose your debiasing, and
+      watch the two numbers that matter disagree: an eval can look fine on aggregate
+      accuracy and still <em>crown the wrong model</em>.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+
+      <div class="col col--cfg">
+        <h2>the panel</h2>
+        <div id="judges"></div>
+
+        <h2>the protocol</h2>
+        <label class="chk"><input type="checkbox" id="c-swap">
+          <span><b>position-swap</b><br>Judge each pair in both orders. Kills position bias, doubles the bill.</span></label>
+        <label class="chk"><input type="checkbox" id="c-agg">
+          <span><b>confidence-weighted</b><br>Weight votes by margin instead of plain majority.</span></label>
+        <label class="chk"><input type="checkbox" id="c-self">
+          <span><b>recuse own family</b><br>A judge doesn't vote on output from its own family.</span></label>
+        <label class="chk"><input type="checkbox" id="c-len">
+          <span><b>length-capped rubric</b><br>Rubric refuses to credit length on its own.</span></label>
+
+        <h2>presets</h2>
+        <div class="row">
+          <button id="p-cheap">one cheap judge</button>
+          <button id="p-mono">the monoculture</button>
+          <button id="p-full">full council</button>
+        </div>
+      </div>
+
+      <div class="col col--out">
+        <div class="metrics">
+          <div class="metric"><span class="metric__num" id="m-agree">—</span><span class="metric__lab">agreement with humans</span></div>
+          <div class="metric"><span class="metric__num" id="m-kappa">—</span><span class="metric__lab">Cohen's κ</span></div>
+          <div class="metric"><span class="metric__num" id="m-close">—</span><span class="metric__lab">accuracy on close calls</span></div>
+          <div class="metric"><span class="metric__num" id="m-cost">—</span><span class="metric__lab">tokens / item</span></div>
+        </div>
+        <p class="status" id="status">—</p>
+
+        <h3>where the errors come from</h3>
+        <div id="attr" class="attr"></div>
+        <p class="hint">
+          Measured by counterfactual, not guesswork: each bias is switched off with the
+          same random draws, and the accuracy delta is what it was costing you.
+        </p>
+
+        <h3>the leaderboard your eval produces</h3>
+        <div id="board" class="board"></div>
+        <p class="hint" id="board-note"></p>
+        <p class="hint" id="truth-note"></p>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>What this is:</strong> four systems are ranked by pairwise LLM-judge
+      comparisons over 400 items. Ground truth is known to the simulation and hidden
+      from the judges. Each judge carries documented, reproducible biases —
+      <em>position</em> (prefers whatever came first), <em>verbosity</em> (prefers the
+      longer answer), <em>self-preference</em> (prefers its own model family), plus
+      noise. The candidates are built so verbosity is <em>uncorrelated</em> with
+      quality: the best model is terse and the second-best is the wordiest.
+      That's the trap. A length-loving judge scores ~70% agreement — a number most
+      teams would ship — while ranking the second-best model first. Aggregate accuracy
+      hides it; the leaderboard doesn't. The lab shows the fixes that actually work
+      (swap the order, cap length credit, recuse the family, diversify the panel)
+      and what each one costs, because a council of four with swapping is eight
+      judge calls per item. Companion to the
+      <a href="https://ashwani-bhat.github.io/interview-blogs/agentic-harness-field-manual.html">Agentic Harness field manual</a>.
+    </p>
+  </footer>
+
+  <script src="judges.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

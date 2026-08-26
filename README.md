@@ -19,6 +19,7 @@ Small, weird, hands-on ML projects — built one at a time, each with a live in-
 | D14 | Fly through English as a 3D word galaxy | — | coming up |
 | D15 | The Model Zoo — everything, open-sourced | — | coming up |
 | D16 | Harness Lab — tune an agentic harness, not the model | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d16-harness-lab/) | [`d16-harness-lab/`](./d16-harness-lab/) |
+| D17 | Judge & Jury — LLM-as-a-Judge bias and the leaderboards it corrupts | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d17-judge-and-jury/) | [`d17-judge-and-jury/`](./d17-judge-and-jury/) |
 
 Every demo is a static page that runs (and where applicable, **trains**) entirely in
 your browser — no backend, no build step. Each project folder has its own README

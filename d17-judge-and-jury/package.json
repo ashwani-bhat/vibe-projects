@@ -1,0 +1,10 @@
+{
+  "name": "d17-judge-and-jury",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LLM-as-a-Judge evaluation protocols, judge bias, and the leaderboards they corrupt",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}
