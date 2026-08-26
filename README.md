@@ -18,6 +18,7 @@ Small, weird, hands-on ML projects — built one at a time, each with a live in-
 | D13 | An AI courtroom — prosecution, defense, judges | — | coming up |
 | D14 | Fly through English as a 3D word galaxy | — | coming up |
 | D15 | The Model Zoo — everything, open-sourced | — | coming up |
+| D16 | Harness Lab — tune an agentic harness, not the model | [▶ play](https://ashwani-bhat.github.io/vibe-projects/d16-harness-lab/) | [`d16-harness-lab/`](./d16-harness-lab/) |
 
 Every demo is a static page that runs (and where applicable, **trains**) entirely in
 your browser — no backend, no build step. Each project folder has its own README

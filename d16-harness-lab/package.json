@@ -1,0 +1,10 @@
+{
+  "name": "d16-harness-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tune an agentic harness against a fixed model and watch pass rate, false-success rate and cost per solve move",
+  "scripts": {
+    "test": "node test/smoke.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}

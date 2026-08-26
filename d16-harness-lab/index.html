@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harness Lab</title>
+  <meta name="description" content="Tune an agentic harness — step budgets, verifiers, observation shaping, compaction, typed errors — against a fixed model, and watch pass rate, false-success rate and cost per solve move.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🔧 Harness Lab</h1>
+    <p class="tagline">
+      The model is <em>fixed</em>. Everything you can change is the harness around it.
+      Tune the loop, run 200 tickets, and watch pass rate, wrong-fixes-shipped and
+      cost per solve move — the actual job of an agentic-systems engineer.
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+
+      <div class="col col--knobs">
+        <h2>the harness</h2>
+
+        <div class="knob">
+          <span class="knob__label">step budget <b id="k-budget-val">20</b> turns</span>
+          <input type="range" id="k-budget" min="6" max="40" value="20">
+          <p class="knob__note">Too tight truncates real work; too loose funds doom loops.</p>
+        </div>
+
+        <div class="knob">
+          <span class="knob__label">verifier</span>
+          <div class="btns" id="k-verifier">
+            <button data-v="none" class="on">none</button>
+            <button data-v="weak">weak</button>
+            <button data-v="strict">strict</button>
+          </div>
+          <p class="knob__note">The only thing standing between a plausible patch and a wrong fix in production. Costs tokens; strict also false-rejects.</p>
+        </div>
+
+        <label class="chk"><input type="checkbox" id="k-shaping">
+          <span><b>shape observations</b><br>Return the error region, not the 2MB log.</span></label>
+
+        <label class="chk"><input type="checkbox" id="k-compaction">
+          <span><b>compaction</b><br>Caps the window — and sometimes drops a load-bearing fact.</span></label>
+
+        <label class="chk"><input type="checkbox" id="k-typed">
+          <span><b>typed tool errors</b><br>A failure that carries information breaks retry loops.</span></label>
+
+        <label class="chk"><input type="checkbox" id="k-noprog">
+          <span><b>no-progress detector</b><br>Stop after 3 dead turns and hand back findings.</span></label>
+
+        <div class="row">
+          <button id="btn-naive">↺ naive</button>
+          <button id="btn-kitchen">✦ everything on</button>
+        </div>
+      </div>
+
+      <div class="col col--out">
+        <div class="row row--run">
+          <button id="btn-run" class="big">▶ run 200 tickets</button>
+          <button id="btn-watch">👁 watch one ticket</button>
+          <button id="btn-clear">🗑 clear dots</button>
+        </div>
+
+        <div class="metrics">
+          <div class="metric"><span class="metric__num" id="m-pass">—</span><span class="metric__lab">pass rate</span></div>
+          <div class="metric metric--bad"><span class="metric__num" id="m-false">—</span><span class="metric__lab">wrong fix shipped</span></div>
+          <div class="metric"><span class="metric__num" id="m-doom">—</span><span class="metric__lab">gave up / burned out</span></div>
+          <div class="metric"><span class="metric__num" id="m-solve">—</span><span class="metric__lab">tok / solved ticket</span></div>
+          <div class="metric"><span class="metric__num" id="m-cost">—</span><span class="metric__lab">avg tok / ticket</span></div>
+          <div class="metric"><span class="metric__num" id="m-p95">—</span><span class="metric__lab">p95 turns</span></div>
+        </div>
+
+        <div class="gates">
+          <span class="gate" id="g-pass">—</span>
+          <span class="gate" id="g-honest">—</span>
+          <span class="gate" id="g-cheap">—</span>
+        </div>
+        <p class="ship" id="ship">run a batch to see where you stand</p>
+
+        <canvas id="pareto-canvas" width="480" height="230"></canvas>
+        <p class="hint" id="pareto-note"></p>
+        <p class="hint">
+          Every config you run leaves a dot. Cyan = clears the gate, amber = latest.
+          The shaded corner is shippable. You are hand-exploring a Pareto frontier.
+        </p>
+
+        <div class="term-wrap">
+          <div class="term-bar">trajectory · one ticket, turn by turn</div>
+          <div id="term" class="term"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <strong>What this is:</strong> a simulation of the thing that actually decides whether
+      an agent works — not the model, the harness. A fixed, imperfect model works bug tickets
+      (1–3 real bugs each) through locate → read → edit → test. Every mechanic is a real
+      phenomenon with its real shape: <em>context rot</em> (action accuracy decays as the
+      window fills), <em>quadratic cost</em> (every turn re-reads the whole context),
+      <em>doom loops</em> (identical retries after uninformative errors), <em>compaction
+      risk</em> (a summarizer that drops the one fact you needed), and <em>false success</em>
+      — the worst outcome, a wrong fix that looks done because nothing in the loop could tell.
+      Model competence is a constant in <code>sim.js</code>; only the harness knobs move.
+      With everything on, the same model goes from roughly a third of tickets to over 90%.
+      Companion to the
+      <a href="https://ashwani-bhat.github.io/interview-blogs/agentic-harness-field-manual.html">Agentic Harness field manual</a>.
+    </p>
+  </footer>
+
+  <script src="sim.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
